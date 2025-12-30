@@ -1,3 +1,6 @@
 <template>
-  <p>This is the Activity Overview View</p>
+  <ActivityList />
 </template>
+
+<script setup lang="ts">
+</script>
