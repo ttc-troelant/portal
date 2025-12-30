@@ -2,11 +2,25 @@
 </script>
 
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <nav>
+    <h1>TTC Troelant Admin</h1>
+    <RouterLink class="routerlink" to="/">Activiteiten</RouterLink>
+    <RouterLink class="routerlink" to="/login">Login</RouterLink>
+  </nav>
+  <main>
+    <RouterView />
+  </main>
 </template>
 
-<style scoped></style>
+<style scoped>
+main {
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.routerlink {
+  margin-right: 1rem;
+}
+</style>

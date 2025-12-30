@@ -5,6 +5,7 @@ import App from './App.vue'
 import router from './router'
 import PrimeVue from 'primevue/config'
 import Aura from '@primeuix/themes/aura'
+import { useAuthStore } from './stores/authStore'
 
 const app = createApp(App)
 
@@ -15,5 +16,8 @@ app.use(PrimeVue, {
     preset: Aura,
   },
 })
+
+const authStore = useAuthStore()
+authStore.restoreTokensFromStorage()
 
 app.mount('#app')
