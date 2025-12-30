@@ -1,5 +1,4 @@
 <script setup lang="ts">
-  import { Button } from 'primevue';
 </script>
 
 <template>
@@ -8,7 +7,6 @@
     Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
     documentation
   </p>
-  <Button label="Click Me"></Button>
 </template>
 
 <style scoped></style>
