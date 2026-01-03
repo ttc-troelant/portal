@@ -8,6 +8,7 @@ import router from './router'
 import PrimeVue from 'primevue/config'
 import Aura from '@primeuix/themes/aura'
 import { useAuthStore } from './stores/authStore'
+import { ConfirmationService } from 'primevue'
 
 const app = createApp(App)
 
@@ -18,8 +19,10 @@ app.use(PrimeVue, {
     preset: Aura,
   },
 })
+app.use(ConfirmationService)
 
 const authStore = useAuthStore()
 authStore.restoreTokensFromStorage()
+await authStore.refreshAccessToken()
 
 app.mount('#app')

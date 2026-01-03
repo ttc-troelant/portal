@@ -33,3 +33,7 @@ api.interceptors.request.use(async (config) => {
 })
 
 export default api
+
+export const authApi = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL,
+})

@@ -1,10 +1,15 @@
 import ActivityOverviewView from '@/views/ActivityOverviewView.vue'
-import LoginView from '@/views/LoginView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   { path: '/', component: ActivityOverviewView },
-  { path: '/login', component: LoginView },
+  {
+    path: '/login',
+    component: () => import('@/views/LoginView.vue'),
+    meta: {
+      public: true,
+    },
+  },
 ]
 
 const router = createRouter({

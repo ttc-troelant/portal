@@ -2,7 +2,7 @@
   <form @submit.prevent="onLoginSubmit">
     <div class="login-form">
       <div class="fields">
-        <InputText id="email" v-model="form.email" type="email" required placeholder="email" />
+        <InputText id="email" inputmode="email" v-model="form.email" type="email" required placeholder="email" />
         <Password id="password" v-model="form.password" toggleMask :feedback="false" required
           placeholder="wachtwoord" />
       </div>

@@ -1,4 +1,4 @@
-import api from '@/plugins/axios'
+import api, { authApi } from '@/plugins/axios'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
@@ -53,7 +53,7 @@ export const useAuthStore = defineStore('auth', () => {
     if (!refreshToken.value) return null
 
     try {
-      const response = await api.post('/auth/refresh', {
+      const response = await authApi.post('/auth/refresh', {
         refreshToken: refreshToken.value,
       })
 
