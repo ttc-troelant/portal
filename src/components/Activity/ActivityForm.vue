@@ -3,8 +3,7 @@
     <form @submit.prevent="submit">
       <div class="p-fluid">
         <div class="field">
-          <Textarea v-model="form.title" placeholder="Titel" :invalid="!!errors.title" 
-          autoResize/>
+          <Textarea v-model="form.title" placeholder="Titel" :invalid="!!errors.title" autoResize />
           <small v-if="errors.title" class="p-error">{{ errors.title }}</small>
         </div>
 
@@ -13,25 +12,20 @@
         </div>
 
         <div class="field">
-          <DatePicker v-model="form.from" showTime showIcon 
-          placeholder="Van"
-          :invalid="!!errors.from"/>
+          <DatePicker v-model="form.from" showTime showIcon placeholder="Van" showButtonBar :invalid="!!errors.from"
+            :stepMinute="stepMinute" />
           <small v-if="errors.from" class="p-error">{{ errors.from }}</small>
         </div>
 
         <div class="field">
-          <DatePicker v-model="form.till" showTime showIcon
-          placeholder="Tot"
-          :invalid="!!errors.till" />
+          <DatePicker v-model="form.till" showTime showIcon placeholder="Tot" showButtonBar :invalid="!!errors.till"
+            :stepMinute="stepMinute" />
           <small v-if="errors.till" class="p-error">{{ errors.till }}</small>
         </div>
 
         <div class="field">
-          <Select v-model="form.category" 
-          :options="ActivityCategoryOptions" optionLabel="label" optionValue="value"
-          placeholder="Categorie" 
-          checkmark
-          :invalid="!!errors.category"/>
+          <Select v-model="form.category" :options="ActivityCategoryOptions" optionLabel="label" optionValue="value"
+            placeholder="Categorie" checkmark :invalid="!!errors.category" />
           <small v-if="errors.category" class="p-error">{{ errors.category }}</small>
         </div>
 
@@ -60,6 +54,8 @@ const props = defineProps<{
   visible: boolean
   activity?: Activity | null
 }>()
+
+const stepMinute = 15
 
 const emit = defineEmits(['close'])
 
