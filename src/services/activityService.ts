@@ -1,4 +1,4 @@
-import api from '@/plugins/axios'
+import api, { authApi } from '@/plugins/axios'
 import type { Activity } from '@/models/Activity'
 import type { CreateActivityRequest, PatchActivityRequest } from '@/models/ActivityRequest'
 
@@ -20,5 +20,13 @@ export const activityService = {
 
   async delete(id: number): Promise<void> {
     await api.delete(`/Activity/${id}`)
+  },
+
+  async importIcs(file: File): Promise<{ imported: number; activities: Activity[] }> {
+    const form = new FormData()
+    form.append('file', file)
+    console.log([...form.entries()]);
+    const { data } = await api.post('/Activity/import', form)
+    return data
   },
 }

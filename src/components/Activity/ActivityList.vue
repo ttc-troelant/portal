@@ -3,7 +3,10 @@
     <template #header>
       <div class="table-header">
         <span class="table-header-title">Activiteiten</span>
-        <Button @click="openCreate"><i class="pi pi-plus-circle" />Toevoegen</Button>
+        <div class="table-header-buttons">
+          <Button @click="openCreate"><i class="pi pi-plus-circle" />Toevoegen</Button>
+          <Button @click="importIcs" :disabled="isImporting"><i class="pi pi-download" />Importeer ICS</Button>
+        </div>
       </div>
     </template>
     <Column field="title" header="Titel" />
@@ -97,6 +100,26 @@ function closeDialog() {
   dialogVisible.value = false
 }
 
+const isImporting = ref(false)
+function importIcs() {
+  const input = document.createElement('input')
+  input.type = 'file'
+  input.accept = '.ics,text/calendar'
+  input.onchange = async (e) => {
+    const file = (e.target as HTMLInputElement)?.files?.[0]
+    if (!file) return
+    isImporting.value = true
+    try {
+      await activityStore.importIcs(file)
+    } catch (err) {
+      console.error('ICS import failed', err)
+    } finally {
+      isImporting.value = false
+    }
+  }
+  input.click()
+}
+
 onMounted(() => {
   activityStore.getActivities()
 })
@@ -112,5 +135,9 @@ onMounted(() => {
 .table-header-title {
   font-size: 1.5rem;
   font-weight: bold;
+}
+
+.table-header-buttons>button {
+  margin-left: 0.5rem;
 }
 </style>

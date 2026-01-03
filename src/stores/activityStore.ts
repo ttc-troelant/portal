@@ -52,6 +52,20 @@ export const useActivityStore = defineStore('activity', () => {
     }
   }
 
+  async function importIcs(file: File) {
+    loading.value = true
+    try {
+      const result = await activityService.importIcs(file)
+      const created = result.activities ?? []
+      for (const a of created) {
+        if (!activities.value.some(e => e.id === a.id)) activities.value.push(a)
+      }
+      return result
+    } finally {
+      loading.value = false
+    }
+  }
+
   return {
     // Properties
     activities,
@@ -62,5 +76,6 @@ export const useActivityStore = defineStore('activity', () => {
     createActivity,
     updateActivity,
     deleteActivity,
+    importIcs,
   }
 })

@@ -5,32 +5,47 @@ const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
 })
 
-let isRefreshing = false
-let refreshPromise: Promise<string | null> | null = null
-
 api.interceptors.request.use(async (config) => {
-  const authStore = useAuthStore()
+  const authStore = useAuthStore() 
+  if (authStore.accessToken) 
+    config.headers.set('Authorization', `Bearer ${authStore.accessToken}`) 
+  return config
+})
 
-  if (authStore.isAccessTokenExpired()) {
-    if (!isRefreshing) {
-      isRefreshing = true
-      refreshPromise = authStore.refreshAccessToken().finally(() => {
+
+let isRefreshing = false
+let queue: ((token: string) => void)[] = []
+
+api.interceptors.response.use(
+  res => res,
+  async err => {
+    const authStore = useAuthStore()
+    const original = err.config
+
+    if (err.response?.status === 401 && !original._retry) {
+      original._retry = true
+
+      if (!isRefreshing) {
+        isRefreshing = true
+        const newToken = await authStore.refreshAccessToken()
         isRefreshing = false
+
+        queue.forEach(cb => cb(newToken))
+        queue = []
+      }
+
+      return new Promise(resolve => {
+        queue.push((token) => {
+          original.headers.set('Authorization', `Bearer ${token}`)
+          resolve(api(original))
+        })
       })
     }
 
-    const newToken = await refreshPromise
-    if (!newToken) {
-      return config
-    }
+    return Promise.reject(err)
   }
+)
 
-  if (authStore.accessToken) {
-    config.headers.Authorization = `Bearer ${authStore.accessToken}`
-  }
-
-  return config
-})
 
 export default api
 
