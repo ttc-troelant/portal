@@ -1,24 +1,23 @@
 import { useAuthStore } from '@/stores/authStore'
 import axios from 'axios'
 
+// TODO: Add timeout to api calls
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
 })
 
 api.interceptors.request.use(async (config) => {
-  const authStore = useAuthStore() 
-  if (authStore.accessToken) 
-    config.headers.set('Authorization', `Bearer ${authStore.accessToken}`) 
+  const authStore = useAuthStore()
+  if (authStore.accessToken) config.headers.set('Authorization', `Bearer ${authStore.accessToken}`)
   return config
 })
-
 
 let isRefreshing = false
 let queue: ((token: string) => void)[] = []
 
 api.interceptors.response.use(
-  res => res,
-  async err => {
+  (res) => res,
+  async (err) => {
     const authStore = useAuthStore()
     const original = err.config
 
@@ -30,11 +29,11 @@ api.interceptors.response.use(
         const newToken = await authStore.refreshAccessToken()
         isRefreshing = false
 
-        queue.forEach(cb => cb(newToken))
+        queue.forEach((cb) => cb(newToken))
         queue = []
       }
 
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         queue.push((token) => {
           original.headers.set('Authorization', `Bearer ${token}`)
           resolve(api(original))
@@ -43,9 +42,8 @@ api.interceptors.response.use(
     }
 
     return Promise.reject(err)
-  }
+  },
 )
-
 
 export default api
 
