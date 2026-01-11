@@ -22,6 +22,7 @@ declare module 'vue' {
     Dialog: typeof import('primevue/dialog')['default']
     Dropdown: typeof import('primevue/dropdown')['default']
     InputText: typeof import('primevue/inputtext')['default']
+    Message: typeof import('primevue/message')['default']
     Password: typeof import('primevue/password')['default']
     PickList: typeof import('primevue/picklist')['default']
     RoleForm: typeof import('./src/components/User/RoleForm.vue')['default']

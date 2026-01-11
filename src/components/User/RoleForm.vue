@@ -3,14 +3,14 @@
     style="width: 600px">
     <form @submit.prevent="submit">
       <div class="p-fluid">
-        <div v-if="!role" class="field">
-          <InputText v-model="form.name" placeholder="Rolnaam" :invalid="!!errors.name" />
-          <small v-if="errors.name" class="p-error">{{ errors.name }}</small>
+        <div class="field">
+          <InputText v-model="form.name" placeholder="Rolnaam" :invalid="!!errors.name" :disabled="!!role" />
+          <Message v-if="errors.name" severity="error" variant="simple" size="small">{{ errors.name }}</Message>
         </div>
 
         <PickList v-model="pickListValue" listStyle="height:300px">
           <template #sourceheader>Beschikbaar</template>
-          <template #targetheader>Geselecteerd</template>
+          <template #targetheader>Toegewezen</template>
           <template #option="{ option }">
             {{ option }}
           </template>

@@ -4,7 +4,7 @@
       <div class="p-fluid">
         <div class="field">
           <Textarea v-model="form.title" placeholder="Titel" :invalid="!!errors.title" autoResize />
-          <small v-if="errors.title" class="p-error">{{ errors.title }}</small>
+          <Message v-if="errors.title" severity="error" variant="simple" size="small">{{ errors.title }}</Message>
         </div>
 
         <div class="field">
@@ -14,19 +14,19 @@
         <div class="field">
           <DatePicker v-model="form.from" showTime showIcon placeholder="Van" showButtonBar :invalid="!!errors.from"
             :stepMinute="stepMinute" />
-          <small v-if="errors.from" class="p-error">{{ errors.from }}</small>
+          <Message v-if="errors.from" severity="error" variant="simple" size="small">{{ errors.from }}</Message>
         </div>
 
         <div class="field">
           <DatePicker v-model="form.till" showTime showIcon placeholder="Tot" showButtonBar :invalid="!!errors.till"
             :stepMinute="stepMinute" />
-          <small v-if="errors.till" class="p-error">{{ errors.till }}</small>
+          <Message v-if="errors.till" severity="error" variant="simple" size="small">{{ errors.till }}</Message>
         </div>
 
         <div class="field">
           <Select v-model="form.category" :options="ActivityCategoryOptions" optionLabel="label" optionValue="value"
             placeholder="Categorie" checkmark :invalid="!!errors.category" />
-          <small v-if="errors.category" class="p-error">{{ errors.category }}</small>
+          <Message v-if="errors.category" severity="error" variant="simple" size="small">{{ errors.category }}</Message>
         </div>
 
         <div class="field">
