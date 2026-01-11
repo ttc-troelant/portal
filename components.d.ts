@@ -17,6 +17,7 @@ declare module 'vue' {
     Calendar: typeof import('primevue/calendar')['default']
     Column: typeof import('primevue/column')['default']
     ConfirmDialog: typeof import('primevue/confirmdialog')['default']
+    CreateUserForm: typeof import('./src/components/User/CreateUserForm.vue')['default']
     DataTable: typeof import('primevue/datatable')['default']
     DatePicker: typeof import('primevue/datepicker')['default']
     Dialog: typeof import('primevue/dialog')['default']
@@ -37,5 +38,6 @@ declare module 'vue' {
     TabPanels: typeof import('primevue/tabpanels')['default']
     Tabs: typeof import('primevue/tabs')['default']
     TextArea: typeof import('primevue/textarea')['default']
+    UserList: typeof import('./src/components/User/UserList.vue')['default']
   }
 }
