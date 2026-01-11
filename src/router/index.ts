@@ -4,6 +4,10 @@ import { createRouter, createWebHistory } from 'vue-router'
 const routes = [
   { path: '/', component: ActivityOverviewView },
   {
+    path: '/users',
+    component: () => import('@/views/UserManagementView.vue'),
+  },
+  {
     path: '/login',
     component: () => import('@/views/LoginView.vue'),
     meta: {

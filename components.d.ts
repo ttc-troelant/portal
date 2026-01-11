@@ -23,9 +23,18 @@ declare module 'vue' {
     Dropdown: typeof import('primevue/dropdown')['default']
     InputText: typeof import('primevue/inputtext')['default']
     Password: typeof import('primevue/password')['default']
+    PickList: typeof import('primevue/picklist')['default']
+    RoleForm: typeof import('./src/components/User/RoleForm.vue')['default']
+    RoleList: typeof import('./src/components/User/RoleList.vue')['default']
+    RolePermissionEditor: typeof import('./src/components/User/RolePermissionEditor.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Select: typeof import('primevue/select')['default']
+    Tab: typeof import('primevue/tab')['default']
+    TabList: typeof import('primevue/tablist')['default']
+    TabPanel: typeof import('primevue/tabpanel')['default']
+    TabPanels: typeof import('primevue/tabpanels')['default']
+    Tabs: typeof import('primevue/tabs')['default']
     TextArea: typeof import('primevue/textarea')['default']
   }
 }
