@@ -3,12 +3,12 @@
 
 <template>
   <div class="user-management">
-    <h2>User management</h2>
+    <h2>Gebruikersbeheer</h2>
 
     <Tabs value="roles">
       <TabList>
+        <Tab value="users">Gebruikers</Tab>
         <Tab value="roles">Functies</Tab>
-        <Tab value="users">Users</Tab>
       </TabList>
 
       <TabPanels>
