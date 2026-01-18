@@ -23,7 +23,7 @@ const items = computed<MenuItem[]>(() => [
   {
     label: 'Activiteiten',
     icon: 'pi pi-calendar',
-    command: () => router.push('/'),
+    command: () => router.push('/activities'),
     visible: authStore.hasPermission('Activity.View'),
   },
   {
