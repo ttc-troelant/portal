@@ -4,8 +4,10 @@
       <div class="table-header">
         <span class="table-header-title">Activiteiten</span>
         <div class="table-header-buttons">
-          <Button @click="openCreate"><i class="pi pi-plus-circle" />Toevoegen</Button>
-          <Button @click="importIcs" :disabled="isImporting"><i class="pi pi-download" />Importeer ICS</Button>
+          <Button @click="openCreate"><i class="pi pi-plus-circle"
+              :disabled="!can('Activity.Create')" />Toevoegen</Button>
+          <Button @click="importIcs" :disabled="true"><i class="pi pi-download" />Importeer ICS</Button>
+          <!-- <Button @click="importIcs" :disabled="isImporting"><i class="pi pi-download" />Importeer ICS</Button> -->
         </div>
       </div>
     </template>
@@ -24,8 +26,9 @@
     <Column field="location" header="Locatie" />
     <Column header="Acties">
       <template #body="slotProps">
-        <Button icon="pi pi-pencil" class="p-button-text p-mr-2" @click="openEdit(slotProps.data)" />
-        <Button icon="pi pi-trash" :disabled="isDeleting" class="p-button-text p-button-danger"
+        <Button icon="pi pi-pencil" class="p-button-text p-mr-2" @click="openEdit(slotProps.data)"
+          :disabled="!can('Activity.Update')" />
+        <Button icon="pi pi-trash" :disabled="isDeleteDisabled" class="p-button-text p-button-danger"
           @click="confirmDelete(slotProps.data)" />
       </template>
     </Column>
@@ -35,13 +38,14 @@
 </template>
 
 <script setup lang="ts">
-import type { Activity } from '@/models/Activity';
-import { useActivityStore } from '@/stores/activityStore';
-import { useConfirm } from 'primevue';
-import { onMounted, ref } from 'vue';
-import ActivityForm from './ActivityForm.vue';
+import type { Activity } from '@/models/Activity'
+import { useActivityStore } from '@/stores/activityStore'
+import { useConfirm } from 'primevue'
+import { computed, onMounted, ref } from 'vue'
+import ActivityForm from './ActivityForm.vue'
+import { usePermissions } from '@/composables/usePermissions'
 
-
+const { can } = usePermissions()
 const activityStore = useActivityStore()
 
 const dateFormatter = new Intl.DateTimeFormat('nl-BE', {
@@ -59,7 +63,8 @@ const dateDisplay = (dateString: string) => {
 
 const confirm = useConfirm()
 const isDeleting = ref(false)
-const confirmDelete = (activity: { id: number, title: string }) => {
+const isDeleteDisabled = computed(() => isDeleting.value || !can('Activity.Create').value)
+const confirmDelete = (activity: { id: number; title: string }) => {
   confirm.require({
     message: `Weet je zeker dat je de activiteit ${activity.title} wilt verwijderen?`,
     header: 'Verwijder Activiteit',
@@ -79,7 +84,7 @@ const confirmDelete = (activity: { id: number, title: string }) => {
     },
     reject: () => {
       // Do nothing
-    }
+    },
   })
 }
 

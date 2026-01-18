@@ -2,7 +2,7 @@
   <div>
     <div class="header">
       <h3>Gebruikers</h3>
-      <Button label="Gebruiker aanmaken" icon="pi pi-plus" @click="openCreate" />
+      <Button label="Gebruiker aanmaken" icon="pi pi-plus" @click="openCreate" :disabled="!can('User.Create')" />
     </div>
 
     <DataTable :value="userStore.users" :loading="userStore.loading" dataKey="id" stripedRows>
@@ -20,14 +20,14 @@
 
       <Column header="Acties" style="width: 160px">
         <template #body="{ data }">
-          <Button icon="pi pi-pencil" class="p-button-text p-mr-2" @click="openEdit(data)" />
+          <Button icon="pi pi-pencil" class="p-button-text p-mr-2" @click="openEdit(data)" :disabled="!can('User.')" />
           <Button icon="pi pi-trash" class="p-button-text p-button-danger" disabled />
         </template>
       </Column>
     </DataTable>
 
     <CreateUserForm :visible="createDialogVisible" @close="closeCreateDialog" />
-    <EditUserRolesForm :visible="editDialogVisible" :user="selectedUser" @close="closeEditDialog"/>
+    <EditUserRolesForm :visible="editDialogVisible" :user="selectedUser" @close="closeEditDialog" />
   </div>
 </template>
 
@@ -36,14 +36,16 @@ import { onMounted, ref } from 'vue'
 import { useUserStore } from '@/stores/userStore'
 import type { User } from '@/models/User'
 import EditUserRolesForm from './EditUserRolesForm.vue'
+import { usePermissions } from '@/composables/usePermissions'
 
 const userStore = useUserStore()
+const { can } = usePermissions()
 
 onMounted(() => {
   userStore.fetchUsers()
 })
 
-function showFullName(user: { firstName?: string, lastName?: string }) {
+function showFullName(user: { firstName?: string; lastName?: string }) {
   if (!user) return ''
   return [user.firstName, user.lastName].filter(Boolean).join(' ')
 }
@@ -66,12 +68,10 @@ function openEdit(user: User) {
   editDialogVisible.value = true
 }
 
-function closeEditDialog(){
+function closeEditDialog() {
   selectedUser.value = null
   editDialogVisible.value = false
 }
-
-
 </script>
 
 <style scoped>

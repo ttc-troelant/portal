@@ -1,21 +1,18 @@
-<script setup lang="ts">
-</script>
-
 <template>
   <div class="user-management">
     <h2>Gebruikersbeheer</h2>
 
     <Tabs value="users">
       <TabList>
-        <Tab value="users">Gebruikers</Tab>
-        <Tab value="roles">Functies</Tab>
+        <Tab v-if="can('User.View')" value="users">Gebruikers</Tab>
+        <Tab v-if="can('Role.View')" value="roles">Functies</Tab>
       </TabList>
 
       <TabPanels>
-        <TabPanel value="users">
+        <TabPanel v-if="can('User.View')" value="users">
           <UserList />
         </TabPanel>
-        <TabPanel value="roles">
+        <TabPanel v-if="can('Role.View')" value="roles">
           <RoleList />
         </TabPanel>
       </TabPanels>
@@ -23,6 +20,11 @@
   </div>
 </template>
 
+<script setup lang="ts">
+import { usePermissions } from '@/composables/usePermissions'
+
+const { can } = usePermissions()
+</script>
 
 <style scoped>
 .user-management {

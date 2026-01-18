@@ -2,7 +2,7 @@
   <div>
     <div class="header">
       <h3>Functies</h3>
-      <Button label="Rol Aanmaken" icon="pi pi-plus" @click="openCreate" />
+      <Button label="Rol Aanmaken" icon="pi pi-plus" @click="openCreate" :disabled="!can('Role.Create')" />
     </div>
 
     <DataTable :value="roleStore.roles" :loading="roleStore.loading" dataKey="name" stripedRows>
@@ -16,8 +16,10 @@
 
       <Column header="Acties" style="width: 160px">
         <template #body="{ data }">
-          <Button icon="pi pi-pencil" class="p-button-text p-mr-2" @click="openEdit(data)" />
-          <Button icon="pi pi-trash" class="p-button-text p-button-danger" @click="confirmDelete(data.name)" />
+          <Button icon="pi pi-pencil" class="p-button-text p-mr-2" @click="openEdit(data)"
+            :disabled="!can('Role.Update')" />
+          <Button icon="pi pi-trash" class="p-button-text p-button-danger" @click="confirmDelete(data.name)"
+            :disabled="!can('Role.Delete')" />
         </template>
       </Column>
     </DataTable>
@@ -35,6 +37,9 @@ import { useRoleStore } from '@/stores/roleStore'
 import { useToast, useConfirm } from 'primevue'
 import type { Role } from '@/models/Role'
 import { usePermissionStore } from '@/stores/permissionStore'
+import { usePermissions } from '@/composables/usePermissions'
+
+const { can } = usePermissions()
 
 const roleStore = useRoleStore()
 const permissionStore = usePermissionStore()
