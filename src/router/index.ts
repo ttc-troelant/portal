@@ -5,17 +5,8 @@ import { findFirstAllowedRoute } from './routeAccess'
 const routes = [
   {
     path: '/',
-    redirect: () => {
-      const authStore = useAuthStore()
-
-      if (!authStore.isAuthenticated) {
-        return { name: 'login' }
-      }
-
-      const firstAllowed = findFirstAllowedRoute(routes)
-
-      return firstAllowed?.name ? { name: firstAllowed.name } : { name: 'forbidden' }
-    },
+    name: 'root',
+    redirect: '/login', // temporary, real redirect happens in beforeEach
   },
   {
     path: '/activities',
@@ -60,6 +51,14 @@ router.beforeEach((to) => {
 
   if (!to.meta.public && !authStore.isAuthenticated) {
     return { name: 'login' }
+  }
+
+  if (to.name === 'root') {
+    const firstAllowed = findFirstAllowedRoute(router.getRoutes())
+
+    return firstAllowed
+      ? { name: firstAllowed.name }
+      : { name: 'forbidden' }
   }
 
   const requiredPermission = to.meta.requiredPermission
