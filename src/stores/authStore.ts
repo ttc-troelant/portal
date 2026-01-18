@@ -8,6 +8,10 @@ export const useAuthStore = defineStore('auth', () => {
   const refreshToken = ref<string | null>(null)
   const refreshTokenExpires = ref<string | null>(null)
 
+  // User info from JWT
+  const permissions = ref<string[]>([])
+  const email = ref<string | null>(null)
+
   const isAuthenticated = computed(() => !!refreshToken.value)
 
   function setTokens(
@@ -21,10 +25,17 @@ export const useAuthStore = defineStore('auth', () => {
     refreshToken.value = newRefreshToken
     refreshTokenExpires.value = newRefreshTokenExpires
 
+    // extract permissions from the access token
+    const payload = decodeJwt(newAccessToken)
+    permissions.value = payload?.permissions ?? []
+    email.value = payload?.email ?? null
+
     localStorage.setItem('accessToken', accessToken.value)
     localStorage.setItem('accessTokenExpires', accessTokenExpires.value)
     localStorage.setItem('refreshToken', refreshToken.value)
     localStorage.setItem('refreshTokenExpires', refreshTokenExpires.value)
+    localStorage.setItem('permissions', JSON.stringify(permissions.value))
+    localStorage.setItem('email', email.value ?? '')
   }
 
   function restoreTokensFromStorage() {
@@ -32,6 +43,8 @@ export const useAuthStore = defineStore('auth', () => {
     accessTokenExpires.value = localStorage.getItem('accessTokenExpires')
     refreshToken.value = localStorage.getItem('refreshToken')
     refreshTokenExpires.value = localStorage.getItem('refreshTokenExpires')
+    permissions.value = JSON.parse(localStorage.getItem('permissions') || '[]')
+    email.value = localStorage.getItem('email') || null
   }
 
   function clearTokens() {
@@ -39,11 +52,15 @@ export const useAuthStore = defineStore('auth', () => {
     accessTokenExpires.value = null
     refreshToken.value = null
     refreshTokenExpires.value = null
+    permissions.value = []
+    email.value = null
 
     localStorage.removeItem('accessToken')
     localStorage.removeItem('accessTokenExpires')
     localStorage.removeItem('refreshToken')
     localStorage.removeItem('refreshTokenExpires')
+    localStorage.removeItem('permissions')
+    localStorage.removeItem('email')
   }
 
   function isAccessTokenExpired(): boolean {
@@ -76,6 +93,10 @@ export const useAuthStore = defineStore('auth', () => {
     accessTokenExpires,
     refreshToken,
     refreshTokenExpires,
+
+    permissions,
+    isAuthenticated,
+
     setTokens,
     clearTokens,
     isAccessTokenExpired,
@@ -83,3 +104,12 @@ export const useAuthStore = defineStore('auth', () => {
     refreshAccessToken,
   }
 })
+
+function decodeJwt(token: string){
+  try {
+    const payload = token.split('.')[1] ?? ''
+    return JSON.parse(atob(payload))
+  } catch {
+    return null
+  }
+}

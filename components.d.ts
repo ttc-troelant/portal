@@ -13,6 +13,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     ActivityForm: typeof import('./src/components/Activity/ActivityForm.vue')['default']
     ActivityList: typeof import('./src/components/Activity/ActivityList.vue')['default']
+    AppMenuBar: typeof import('./src/components/Generic/AppMenuBar.vue')['default']
     Button: typeof import('primevue/button')['default']
     Calendar: typeof import('primevue/calendar')['default']
     Card: typeof import('primevue/card')['default']
@@ -25,6 +26,7 @@ declare module 'vue' {
     Dropdown: typeof import('primevue/dropdown')['default']
     EditUserRolesForm: typeof import('./src/components/User/EditUserRolesForm.vue')['default']
     InputText: typeof import('primevue/inputtext')['default']
+    Menubar: typeof import('primevue/menubar')['default']
     Message: typeof import('primevue/message')['default']
     Password: typeof import('primevue/password')['default']
     PickList: typeof import('primevue/picklist')['default']
@@ -39,6 +41,7 @@ declare module 'vue' {
     TabPanel: typeof import('primevue/tabpanel')['default']
     TabPanels: typeof import('primevue/tabpanels')['default']
     Tabs: typeof import('primevue/tabs')['default']
+    Tag: typeof import('primevue/tag')['default']
     TextArea: typeof import('primevue/textarea')['default']
     UserList: typeof import('./src/components/User/UserList.vue')['default']
   }
