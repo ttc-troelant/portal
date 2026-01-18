@@ -23,7 +23,6 @@ app.use(ConfirmationService)
 app.use(ToastService)
 
 const authStore = useAuthStore()
-authStore.restoreTokensFromStorage()
-await authStore.refreshAccessToken()
+await authStore.initialize(router)
 
 app.mount('#app')

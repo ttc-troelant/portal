@@ -49,22 +49,21 @@ const router = createRouter({
 router.beforeEach((to) => {
   const authStore = useAuthStore()
 
-  if (!to.meta.public && !authStore.isAuthenticated) {
+  // Allow public routes without auth
+  if (to.meta.public) return true
+
+  // If not authenticated → redirect to login
+  if (!authStore.isAuthenticated) {
     return { name: 'login' }
   }
 
-  if (to.name === 'root') {
-    const firstAllowed = findFirstAllowedRoute(router.getRoutes())
-
-    return firstAllowed
-      ? { name: firstAllowed.name }
-      : { name: 'forbidden' }
-  }
-
+  // Permission check
   const requiredPermission = to.meta.requiredPermission
   if (requiredPermission && !authStore.hasPermission(requiredPermission)) {
-    return { name: 'activities' }
+    return { name: 'forbidden' }
   }
+
+  return true
 })
 
 export default router

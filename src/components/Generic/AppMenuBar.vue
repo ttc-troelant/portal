@@ -67,17 +67,4 @@ const items = computed<MenuItem[]>(() => [
   font-weight: bold;
   margin-right: 2rem;
 }
-
-.p-menubar-item[data-p-active='true'] a {
-  font-weight: bold;
-  color: green;
-}
-
-.p-menuitem {
-  &.p-focus {
-    >.p-menuitem-content {
-      background-color: aqua !important;
-    }
-  }
-}
 </style>

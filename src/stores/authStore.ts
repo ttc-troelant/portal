@@ -1,6 +1,7 @@
 import api, { authApi } from '@/plugins/axios'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 export const useAuthStore = defineStore('auth', () => {
   const accessToken = ref<string | null>(null)
@@ -92,6 +93,23 @@ export const useAuthStore = defineStore('auth', () => {
     return permissions.value.includes(permission)
   }
 
+  const isInitialized = ref(false)
+  async function initialize(router?: ReturnType<typeof useRouter>) {
+    restoreTokensFromStorage()
+    if (refreshToken.value){
+      const success = await refreshAccessToken()
+      if(!success) {
+        // Failed refresh
+        clearTokens()
+        if(router) {
+          router.replace({ name: 'login' })
+        }
+      }
+    } 
+
+    isInitialized.value = true
+  }
+
   return {
     accessToken,
     accessTokenExpires,
@@ -108,6 +126,9 @@ export const useAuthStore = defineStore('auth', () => {
     restoreTokensFromStorage,
     refreshAccessToken,
     hasPermission,
+
+    isInitialized,
+    initialize,
   }
 })
 
