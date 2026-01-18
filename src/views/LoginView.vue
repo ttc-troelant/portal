@@ -11,17 +11,25 @@
   </form>
 </template>
 <script setup lang="ts">
-import type { LoginRequest } from '@/models/LoginRequest';
-import { login } from '@/services/authService';
-import { reactive } from 'vue';
+import type { LoginRequest } from '@/models/LoginRequest'
+import { findFirstAllowedRoute } from '@/router/routeAccess'
+import { login } from '@/services/authService'
+import { reactive } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const form = reactive<LoginRequest>({
   email: '',
-  password: ''
+  password: '',
 })
 
 async function onLoginSubmit() {
   await login(form)
+
+  const firstAllowed = findFirstAllowedRoute(router.getRoutes())
+
+  router.push(firstAllowed?.name ? { name: firstAllowed.name } : { name: 'forbidden' })
 }
 </script>
 
@@ -41,6 +49,5 @@ form {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  ;
 }
 </style>

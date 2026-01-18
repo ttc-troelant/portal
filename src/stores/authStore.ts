@@ -27,7 +27,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     // extract permissions from the access token
     const payload = decodeJwt(newAccessToken)
-    permissions.value = payload?.permissions ?? []
+    permissions.value = payload?.permission ?? []
     email.value = payload?.email ?? null
 
     localStorage.setItem('accessToken', accessToken.value)
@@ -88,6 +88,10 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  function hasPermission(permission: string) {
+    return permissions.value.includes(permission)
+  }
+
   return {
     accessToken,
     accessTokenExpires,
@@ -95,6 +99,7 @@ export const useAuthStore = defineStore('auth', () => {
     refreshTokenExpires,
 
     permissions,
+    email,
     isAuthenticated,
 
     setTokens,
@@ -102,10 +107,11 @@ export const useAuthStore = defineStore('auth', () => {
     isAccessTokenExpired,
     restoreTokensFromStorage,
     refreshAccessToken,
+    hasPermission,
   }
 })
 
-function decodeJwt(token: string){
+function decodeJwt(token: string) {
   try {
     const payload = token.split('.')[1] ?? ''
     return JSON.parse(atob(payload))

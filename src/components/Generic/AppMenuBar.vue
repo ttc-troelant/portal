@@ -24,12 +24,13 @@ const items = computed<MenuItem[]>(() => [
     label: 'Activiteiten',
     icon: 'pi pi-calendar',
     command: () => router.push('/'),
+    visible: authStore.hasPermission('Activity.View'),
   },
   {
     label: 'Gebruikers',
     icon: 'pi pi-users',
     command: () => router.push('/users'),
-    visible: authStore.isAuthenticated,
+    visible: authStore.hasPermission('User.View'),
   },
   {
     label: 'Account',
