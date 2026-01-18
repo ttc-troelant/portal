@@ -1,5 +1,9 @@
 import type { User } from '@/models/User'
-import type { CreateUserRequest } from '@/models/UserRequest'
+import type {
+  ChangePasswordRequest,
+  CreateUserRequest,
+  SetRolesRequest,
+} from '@/models/UserRequest'
 import { userService } from '@/services/userServices'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
@@ -24,6 +28,15 @@ export const useUserStore = defineStore('users', () => {
     users.value.push(response)
   }
 
+  async function updateUserRoles(userId: string, payload: SetRolesRequest) {
+    await userService.updateUserRoles(userId, payload)
+    await fetchUsers()
+  }
+
+  async function changePassword(payload: ChangePasswordRequest) {
+    await userService.changePassword(payload)
+  }
+
   return {
     users,
     loading,
@@ -31,5 +44,7 @@ export const useUserStore = defineStore('users', () => {
     // Functions
     fetchUsers,
     createUser,
+    updateUserRoles,
+    changePassword,
   }
 })

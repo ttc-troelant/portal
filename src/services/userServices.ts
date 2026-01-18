@@ -1,5 +1,5 @@
 import type { User } from '@/models/User'
-import type { CreateUserRequest } from '@/models/UserRequest'
+import type { ChangePasswordRequest, CreateUserRequest, SetRolesRequest } from '@/models/UserRequest'
 import api from '@/plugins/axios'
 
 export const userService = {
@@ -12,4 +12,12 @@ export const userService = {
     const response = await api.post('/User', payload)
     return response.data
   },
+
+  async updateUserRoles(userId: string, payload: SetRolesRequest): Promise<void> {
+    await api.put(`/User/${userId}/roles`, payload)
+  },
+
+  async changePassword(payload: ChangePasswordRequest): Promise<void> {
+    await api.post('/User/password', payload)
+  }
 }

@@ -7,6 +7,7 @@
     <RouterLink class="routerlink" to="/">Activiteiten</RouterLink>
     <RouterLink class="routerlink" to="/users">Gebruikers</RouterLink>
     <RouterLink class="routerlink" to="/login">Login</RouterLink>
+    <RouterLink class="routerlink" to="/change-password">Change Password</RouterLink>
   </nav>
   <main>
     <RouterView />

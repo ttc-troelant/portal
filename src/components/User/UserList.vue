@@ -20,19 +20,22 @@
 
       <Column header="Acties" style="width: 160px">
         <template #body="{ data }">
-          <Button icon="pi pi-pencil" class="p-button-text p-mr-2" disabled />
+          <Button icon="pi pi-pencil" class="p-button-text p-mr-2" @click="openEdit(data)" />
           <Button icon="pi pi-trash" class="p-button-text p-button-danger" disabled />
         </template>
       </Column>
     </DataTable>
 
-    <CreateUserForm :visible="dialogVisible" @close="closeDialog" />
+    <CreateUserForm :visible="createDialogVisible" @close="closeCreateDialog" />
+    <EditUserRolesForm :visible="editDialogVisible" :user="selectedUser" @close="closeEditDialog"/>
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useUserStore } from '@/stores/userStore'
+import type { User } from '@/models/User'
+import EditUserRolesForm from './EditUserRolesForm.vue'
 
 const userStore = useUserStore()
 
@@ -45,15 +48,30 @@ function showFullName(user: { firstName?: string, lastName?: string }) {
   return [user.firstName, user.lastName].filter(Boolean).join(' ')
 }
 
-const dialogVisible = ref(false)
+const createDialogVisible = ref(false)
 
 function openCreate() {
-  dialogVisible.value = true
+  createDialogVisible.value = true
 }
 
-function closeDialog() {
-  dialogVisible.value = false
+function closeCreateDialog() {
+  createDialogVisible.value = false
 }
+
+const editDialogVisible = ref(false)
+const selectedUser = ref<User | null>(null)
+
+function openEdit(user: User) {
+  selectedUser.value = user
+  editDialogVisible.value = true
+}
+
+function closeEditDialog(){
+  selectedUser.value = null
+  editDialogVisible.value = false
+}
+
+
 </script>
 
 <style scoped>

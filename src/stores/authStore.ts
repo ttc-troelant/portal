@@ -1,12 +1,14 @@
 import api, { authApi } from '@/plugins/axios'
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 export const useAuthStore = defineStore('auth', () => {
   const accessToken = ref<string | null>(null)
   const accessTokenExpires = ref<string | null>(null)
   const refreshToken = ref<string | null>(null)
   const refreshTokenExpires = ref<string | null>(null)
+
+  const isAuthenticated = computed(() => !!refreshToken.value)
 
   function setTokens(
     newAccessToken: string,
