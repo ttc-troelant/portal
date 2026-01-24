@@ -13,11 +13,12 @@
 <script setup lang="ts">
 import type { LoginRequest } from '@/models/LoginRequest'
 import { findFirstAllowedRoute } from '@/router/routeAccess'
-import { login } from '@/services/authService'
+import { useAuthStore } from '@/stores/authStore'
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
+const authStore = useAuthStore()
 
 const form = reactive<LoginRequest>({
   email: '',
@@ -25,7 +26,7 @@ const form = reactive<LoginRequest>({
 })
 
 async function onLoginSubmit() {
-  await login(form)
+  await authStore.login(form)
 
   const firstAllowed = findFirstAllowedRoute(router.getRoutes())
 

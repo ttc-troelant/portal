@@ -1,17 +1,26 @@
-import authApi from '@/plugins/axios'
-import { useAuthStore } from '@/stores/authStore'
-import type { LoginRequest } from '@/models/LoginRequest'
+import type { LoginRequest, LoginResponse } from '@/models/LoginRequest'
+import axios from 'axios'
 
-export async function login(payload: LoginRequest): Promise<void> {
-  const authStore = useAuthStore()
+const timeout = 2000
+const authApi = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL,
+  timeout: timeout,
+})
 
-  console.log('login triggered')
+export const authService = {
+  async login(payload: LoginRequest): Promise<LoginResponse> {
+    const response = await authApi.post('/Auth/login', payload)
+    return response.data
+  },
 
-  const response = await authApi.post('/Auth/login', payload)
+  async refresh(refreshTokenValue: string): Promise<LoginResponse> {
+    const response = await authApi.post('/Auth/refresh', {
+      refreshToken: refreshTokenValue,
+    })
+    return response.data
+  },
 
-  console.log('response received')
-
-  const { accessToken, accessTokenExpires, refreshToken, refreshTokenExpires } = response.data
-
-  authStore.setTokens(accessToken, accessTokenExpires, refreshToken, refreshTokenExpires)
+  async logout(refreshToken: string): Promise<void> {
+    await authApi.post('/Auth/revoke', refreshToken)
+  },
 }

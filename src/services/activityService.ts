@@ -1,4 +1,4 @@
-import api, { authApi } from '@/plugins/axios'
+import api from '@/plugins/axios'
 import type { Activity } from '@/models/Activity'
 import type { CreateActivityRequest, PatchActivityRequest } from '@/models/ActivityRequest'
 

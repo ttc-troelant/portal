@@ -1,4 +1,4 @@
-import api, { authApi } from '@/plugins/axios'
+import type { LoginRequest } from '@/models/LoginRequest'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -14,6 +14,51 @@ export const useAuthStore = defineStore('auth', () => {
   const email = ref<string | null>(null)
 
   const isAuthenticated = computed(() => !!refreshToken.value)
+
+  async function getAuthService() {
+    const { authService } = await import('@/services/authService')
+    return authService
+  }
+
+  async function login(payload: LoginRequest) {
+    const authService = await getAuthService()
+    const response = await authService.login(payload)
+
+    const { accessToken, accessTokenExpires, refreshToken, refreshTokenExpires } = response
+    setTokens(accessToken, accessTokenExpires, refreshToken, refreshTokenExpires)
+  }
+
+  async function refreshAccessToken() {
+    if (!refreshToken.value) return null
+
+    try {
+      const authService = await getAuthService()
+      const response = await authService.refresh(refreshToken.value)
+
+      const {
+        accessToken: newAccessToken,
+        accessTokenExpires: newAccessTokenExpires,
+        refreshToken: newRefreshToken,
+        refreshTokenExpires: newRefreshTokenExpires,
+      } = response
+      setTokens(newAccessToken, newAccessTokenExpires, newRefreshToken, newRefreshTokenExpires)
+
+      return true
+    } catch (error) {
+      console.debug('Failed to refresh access token:', error)
+      clearTokens()
+      return false
+    }
+  }
+
+  async function logout() {
+    if (refreshToken.value) {
+      const authService = await getAuthService()
+      await authService.logout(refreshToken.value)
+    }
+
+    clearTokens()
+  }
 
   function setTokens(
     newAccessToken: string,
@@ -69,26 +114,6 @@ export const useAuthStore = defineStore('auth', () => {
     return new Date(accessTokenExpires.value) <= new Date()
   }
 
-  async function refreshAccessToken() {
-    if (!refreshToken.value) return null
-
-    try {
-      const response = await authApi.post('/auth/refresh', {
-        refreshToken: refreshToken.value,
-      })
-
-      const { newAccessToken, newAccessTokenExpires, newRefreshToken, newRefreshTokenExpires } =
-        response.data
-      setTokens(newAccessToken, newAccessTokenExpires, newRefreshToken, newRefreshTokenExpires)
-
-      return newAccessToken
-    } catch (error) {
-      console.debug('Failed to refresh access token:', error)
-      clearTokens()
-      return null
-    }
-  }
-
   function hasPermission(permission: string) {
     return permissions.value.includes(permission)
   }
@@ -96,16 +121,16 @@ export const useAuthStore = defineStore('auth', () => {
   const isInitialized = ref(false)
   async function initialize(router?: ReturnType<typeof useRouter>) {
     restoreTokensFromStorage()
-    if (refreshToken.value){
+    if (refreshToken.value) {
       const success = await refreshAccessToken()
-      if(!success) {
+      if (!success) {
         // Failed refresh
         clearTokens()
-        if(router) {
+        if (router) {
           router.replace({ name: 'login' })
         }
       }
-    } 
+    }
 
     isInitialized.value = true
   }
@@ -120,6 +145,8 @@ export const useAuthStore = defineStore('auth', () => {
     email,
     isAuthenticated,
 
+    login,
+    logout,
     setTokens,
     clearTokens,
     isAccessTokenExpired,

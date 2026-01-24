@@ -46,7 +46,7 @@ const items = computed<MenuItem[]>(() => [
         label: 'Uitloggen',
         icon: 'pi pi-sign-out',
         command: () => {
-          authStore.clearTokens()
+          authStore.logout()
           router.push('/login')
         },
       },
