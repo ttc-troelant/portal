@@ -89,8 +89,8 @@ async function submit() {
   const payload = {
     title: form.title,
     description: form.description || undefined,
-    from: form.from!.toISOString(),
-    till: form.till!.toISOString(),
+    from: getLocalISOString(form.from!),
+    till: getLocalISOString(form.till!),
     category: form.category,
     location: form.location || undefined,
   }
@@ -102,6 +102,16 @@ async function submit() {
   }
 
   emit('close')
+}
+
+function getLocalISOString(date: Date): string {
+  const pad = (n: number) => String(n).padStart(2, '0')
+  const offset = date.getTimezoneOffset()
+  const offsetSign = offset > 0 ? '-' : '+'
+  const offsetHours = pad(Math.floor(Math.abs(offset) / 60))
+  const offsetMinutes = pad(Math.abs(offset) % 60)
+
+  return date.toISOString().replace('Z', `${offsetSign}${offsetHours}:${offsetMinutes}`)
 }
 
 function resetForm() {
