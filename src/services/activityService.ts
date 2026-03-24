@@ -26,7 +26,9 @@ export const activityService = {
     const form = new FormData()
     form.append('file', file)
     console.log([...form.entries()]);
-    const { data } = await api.post('/Activity/import', form)
+    const { data } = await api.post('/Activity/import', form, {
+      timeout: 30000, // 30 seconds for file uploads
+    })
     return data
   },
 }

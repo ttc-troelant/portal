@@ -6,8 +6,7 @@
         <div class="table-header-buttons">
           <Button @click="openCreate"><i class="pi pi-plus-circle"
               :disabled="!can('Activity.Create')" />Toevoegen</Button>
-          <Button @click="importIcs" :disabled="true"><i class="pi pi-download" />Importeer ICS</Button>
-          <!-- <Button @click="importIcs" :disabled="isImporting"><i class="pi pi-download" />Importeer ICS</Button> -->
+          <Button @click="importIcs" :disabled="isImporting"><i class="pi pi-download" />Importeer ICS</Button>
         </div>
       </div>
     </template>
