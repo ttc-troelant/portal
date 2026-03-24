@@ -34,6 +34,7 @@ import { usePermissionStore } from '@/stores/permissionStore'
 import { useToast } from 'primevue/usetoast'
 import type { CreateRoleRequest, UpdateRoleRequest } from '@/models/RoleRequest'
 
+// TODO: Sort permission alphabetically
 const props = defineProps<{
   visible: boolean
   role?: Role | null
