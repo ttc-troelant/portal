@@ -8,11 +8,11 @@ export const useActivityStore = defineStore('activity', () => {
   const activities = ref<Activity[]>([])
   const loading = ref(false)
 
-  async function getActivities() {
+  async function getActivities(showPastActivities: boolean) {
     loading.value = true
 
     try {
-      activities.value = await activityService.getAll()
+      activities.value = await activityService.getAll(showPastActivities)
     } finally {
       loading.value = false
     }

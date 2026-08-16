@@ -3,8 +3,10 @@ import type { Activity } from '@/models/Activity'
 import type { CreateActivityRequest, PatchActivityRequest } from '@/models/ActivityRequest'
 
 export const activityService = {
-  async getAll(): Promise<Activity[]> {
-    const response = await api.get<Activity[]>('/Activity')
+  async getAll(showPastActivities: boolean): Promise<Activity[]> {
+    const response = await api.get<Activity[]>('/Activity', {
+      params: { includePastEvents: showPastActivities },
+    })
     return response.data
   },
 
@@ -25,7 +27,7 @@ export const activityService = {
   async importIcs(file: File): Promise<{ imported: number; activities: Activity[] }> {
     const form = new FormData()
     form.append('file', file)
-    console.log([...form.entries()]);
+    console.log([...form.entries()])
     const { data } = await api.post('/Activity/import', form)
     return data
   },
