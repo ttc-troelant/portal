@@ -10,6 +10,11 @@
           <!-- <Button @click="importIcs" :disabled="isImporting"><i class="pi pi-download" />Importeer ICS</Button> -->
         </div>
       </div>
+      <div class="table-header-actions">
+        <Checkbox class="checkbox" v-model="showPastActivities" inputId="showPastActivitiesCheckbox"
+          @change="onChangePastActivities" binary />
+        <Label for="showPastActivitiesCheckbox">Toon afgelopen activiteiten</Label>
+      </div>
     </template>
     <Column field="title" header="Titel" />
     <Column field="description" header="Beschrijving" />
@@ -126,8 +131,14 @@ function importIcs() {
 }
 
 onMounted(() => {
-  activityStore.getActivities()
+  activityStore.getActivities(false)
 })
+
+const showPastActivities = ref(false)
+
+function onChangePastActivities() {
+  activityStore.getActivities(showPastActivities.value)
+}
 </script>
 
 <style scoped>
@@ -144,5 +155,15 @@ onMounted(() => {
 
 .table-header-buttons>button {
   margin-left: 0.5rem;
+}
+
+.table-header-actions {
+  display: flex;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.table-header-actions>.checkbox {
+  margin-right: 0.5rem;
 }
 </style>
